@@ -36,6 +36,7 @@ use bitcoin::secp256k1::recovery::RecoverableSignature;
 
 use regex;
 
+use alloc::{string::String, vec, vec::Vec};
 use core::time::Duration;
 use std::sync::{Mutex, Arc};
 use core::sync::atomic::{AtomicBool, AtomicUsize, Ordering};

@@ -205,6 +205,7 @@ impl Poly1305 {
 
 #[cfg(test)]
 mod test {
+	use alloc::vec::Vec;
 	use core::iter::repeat;
 
 	use util::poly1305::Poly1305;

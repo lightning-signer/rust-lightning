@@ -39,6 +39,7 @@ use bitcoin::hash_types::BlockHash;
 
 use bitcoin::secp256k1::key::PublicKey;
 
+use alloc::{vec, vec::Vec};
 use core::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Mutex;

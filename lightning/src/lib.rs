@@ -31,6 +31,7 @@
 #![cfg_attr(all(any(test, feature = "_test_utils"), feature = "unstable"), feature(test))]
 #[cfg(all(any(test, feature = "_test_utils"), feature = "unstable"))] extern crate test;
 
+extern crate alloc;
 extern crate bitcoin;
 extern crate core;
 #[cfg(any(test, feature = "_test_utils"))] extern crate hex;
