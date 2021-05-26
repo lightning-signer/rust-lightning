@@ -32,7 +32,7 @@ use util::logger::Logger;
 use util::ser::{Readable, ReadableArgs, Writer, Writeable, VecWriter};
 use util::byte_utils;
 
-use alloc::vec::Vec;
+use prelude::*;
 use std::collections::HashMap;
 use core::cmp;
 use core::ops::Deref;

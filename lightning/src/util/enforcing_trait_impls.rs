@@ -11,7 +11,7 @@ use ln::chan_utils::{HTLCOutputInCommitment, ChannelPublicKeys, HolderCommitment
 use ln::{chan_utils, msgs};
 use chain::keysinterface::{Sign, InMemorySigner, BaseSign};
 
-use alloc::vec::Vec;
+use prelude::*;
 use core::cmp;
 use std::sync::{Mutex, Arc};
 

@@ -8,7 +8,7 @@
  * at your option.
 */
 
-use alloc::{string::String, vec::Vec};
+use prelude::*;
 
 const ALPHABET: &'static [u8] = b"ybndrfg8ejkmcpqxot1uwisza345h769";
 

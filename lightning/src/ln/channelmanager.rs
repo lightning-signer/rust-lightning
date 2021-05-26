@@ -61,7 +61,7 @@ use util::chacha20::{ChaCha20, ChaChaReader};
 use util::logger::Logger;
 use util::errors::APIError;
 
-use alloc::{string::String, vec::Vec};
+use prelude::*;
 use core::{cmp, mem};
 use core::cell::RefCell;
 use std::collections::{HashMap, hash_map, HashSet};

@@ -40,7 +40,7 @@ use util::errors::APIError;
 use util::config::{UserConfig,ChannelConfig};
 use util::scid_utils::scid_from_parts;
 
-use alloc::{string::String, vec, vec::Vec};
+use prelude::*;
 use core::{cmp,mem,fmt};
 use core::ops::Deref;
 #[cfg(any(test, feature = "fuzztarget"))]
@@ -4929,7 +4929,7 @@ mod tests {
 	use bitcoin::hashes::Hash;
 	use bitcoin::hash_types::{Txid, WPubkeyHash};
 	use std::sync::Arc;
-	use alloc::{vec, vec::Vec};
+	use prelude::*;
 
 	struct TestFeeEstimator {
 		fee_est: u32

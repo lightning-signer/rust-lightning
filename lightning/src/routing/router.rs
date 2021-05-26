@@ -21,7 +21,7 @@ use routing::network_graph::{NetworkGraph, RoutingFees};
 use util::ser::{Writeable, Readable};
 use util::logger::Logger;
 
-use alloc::{vec, vec::Vec};
+use prelude::*;
 use alloc::collections::BinaryHeap;
 use core::cmp;
 use std::collections::HashMap;
@@ -1195,7 +1195,7 @@ mod tests {
 	use bitcoin::secp256k1::key::{PublicKey,SecretKey};
 	use bitcoin::secp256k1::{Secp256k1, All};
 
-	use alloc::{vec, vec::Vec};
+	use prelude::*;
 	use std::sync::Arc;
 
 	// Using the same keys for LN and BTC ids
@@ -3948,7 +3948,7 @@ mod benches {
 	use super::*;
 	use util::logger::{Logger, Record};
 
-	use alloc::vec::Vec;
+	use prelude::*;
 	use test::Bencher;
 
 	struct DummyLogger {}

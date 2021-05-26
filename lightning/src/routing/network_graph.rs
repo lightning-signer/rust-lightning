@@ -32,7 +32,7 @@ use util::logger::Logger;
 use util::events::{MessageSendEvent, MessageSendEventsProvider};
 use util::scid_utils::{block_from_scid, scid_from_parts, MAX_SCID_BLOCK};
 
-use alloc::{string::String, vec, vec::Vec};
+use prelude::*;
 use alloc::collections::{BTreeMap, btree_map::Entry as BtreeEntry};
 use core::{cmp, fmt};
 use std::sync::{RwLock, RwLockReadGuard};
@@ -1140,7 +1140,7 @@ mod tests {
 	use bitcoin::secp256k1::key::{PublicKey, SecretKey};
 	use bitcoin::secp256k1::{All, Secp256k1};
 
-	use alloc::vec::Vec;
+	use prelude::*;
 	use std::sync::Arc;
 
 	fn create_net_graph_msg_handler() -> (Secp256k1<All>, NetGraphMsgHandler<Arc<test_utils::TestChainSource>, Arc<test_utils::TestLogger>>) {

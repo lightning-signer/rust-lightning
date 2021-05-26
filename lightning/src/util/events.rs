@@ -23,7 +23,7 @@ use bitcoin::blockdata::script::Script;
 
 use bitcoin::secp256k1::key::PublicKey;
 
-use alloc::vec::Vec;
+use prelude::*;
 use core::time::Duration;
 use core::ops::Deref;
 

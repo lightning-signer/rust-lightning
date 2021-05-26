@@ -22,7 +22,7 @@ use util::ser::{ReadableArgs, Writeable};
 use bitcoin::blockdata::block::{Block, BlockHeader};
 use bitcoin::hash_types::BlockHash;
 
-use alloc::{vec, vec::Vec};
+use prelude::*;
 use std::collections::HashMap;
 use core::mem;
 

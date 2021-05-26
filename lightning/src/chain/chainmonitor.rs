@@ -37,7 +37,7 @@ use util::logger::Logger;
 use util::events;
 use util::events::EventHandler;
 
-use alloc::vec::Vec;
+use prelude::*;
 use std::collections::{HashMap, hash_map};
 use std::sync::RwLock;
 use core::ops::Deref;

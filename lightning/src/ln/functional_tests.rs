@@ -50,7 +50,7 @@ use bitcoin::secp256k1::key::{PublicKey,SecretKey};
 
 use regex;
 
-use alloc::{vec, vec::Vec};
+use prelude::*;
 use alloc::collections::BTreeSet;
 use std::collections::{HashMap, HashSet};
 use core::default::Default;
