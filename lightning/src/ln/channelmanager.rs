@@ -4160,6 +4160,7 @@ impl<Signer: Sign, M: Deref , T: Deref , K: Deref , F: Deref , L: Deref >
 					&events::MessageSendEvent::SendFundingCreated { ref node_id, .. } => node_id != counterparty_node_id,
 					&events::MessageSendEvent::SendFundingSigned { ref node_id, .. } => node_id != counterparty_node_id,
 					&events::MessageSendEvent::SendFundingLocked { ref node_id, .. } => node_id != counterparty_node_id,
+					&events::MessageSendEvent::SendChannelUpdate { ref node_id, .. } => node_id != counterparty_node_id,
 					&events::MessageSendEvent::SendAnnouncementSignatures { ref node_id, .. } => node_id != counterparty_node_id,
 					&events::MessageSendEvent::UpdateHTLCs { ref node_id, .. } => node_id != counterparty_node_id,
 					&events::MessageSendEvent::SendRevokeAndACK { ref node_id, .. } => node_id != counterparty_node_id,
@@ -4221,6 +4222,16 @@ impl<Signer: Sign, M: Deref , T: Deref , K: Deref , F: Deref , L: Deref >
 						node_id: chan.get_counterparty_node_id(),
 						msg: chan.get_channel_reestablish(&self.logger),
 					});
+					if !chan.should_announce() {
+						// If this is not a public channel, let the peer know what are our routing policies
+						let update = self.get_channel_update(chan);
+						if let Ok(msg) = update {
+							pending_msg_events.push(events::MessageSendEvent::SendChannelUpdate {
+								node_id: counterparty_node_id.clone(),
+								msg,
+							});
+						}
+					}
 					true
 				}
 			} else { true }

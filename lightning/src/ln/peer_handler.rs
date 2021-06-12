@@ -1103,6 +1103,16 @@ impl<Descriptor: SocketDescriptor, CM: Deref, RM: Deref, L: Deref> PeerManager<D
 						peer.pending_outbound_buffer.push_back(peer.channel_encryptor.encrypt_message(&encode_msg!(msg)));
 						self.do_attempt_write_data(&mut descriptor, peer);
 					},
+					MessageSendEvent::SendChannelUpdate { ref node_id, ref msg } => {
+						log_trace!(self.logger, "Handling SendChannelUpdate event in peer_handler for node {} for channel {}",
+								log_pubkey!(node_id),
+								msg.contents.short_channel_id);
+						let (mut descriptor, peer) = get_peer_for_forwarding!(node_id, {
+								//TODO: Do whatever we're gonna do for handling dropped messages
+							});
+						peer.pending_outbound_buffer.push_back(peer.channel_encryptor.encrypt_message(&encode_msg!(msg)));
+						self.do_attempt_write_data(&mut descriptor, peer);
+					},
 					MessageSendEvent::SendAnnouncementSignatures { ref node_id, ref msg } => {
 						log_trace!(self.logger, "Handling SendAnnouncementSignatures event in peer_handler for node {} for channel {})",
 								log_pubkey!(node_id),
