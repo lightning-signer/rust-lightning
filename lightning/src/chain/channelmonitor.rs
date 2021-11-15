@@ -3239,6 +3239,7 @@ mod tests {
 				selected_contest_delay: 67,
 			}),
 			funding_outpoint: Some(funding_outpoint),
+			opt_anchors: None,
 		};
 		// Prune with one old state and a holder commitment tx holding a few overlaps with the
 		// old state.
@@ -3304,7 +3305,7 @@ mod tests {
 		let mut sum_actual_sigs = 0;
 
 		macro_rules! sign_input {
-			($sighash_parts: expr, $idx: expr, $amount: expr, $weight: expr, $sum_actual_sigs: expr) => {
+			($sighash_parts: expr, $idx: expr, $amount: expr, $weight: expr, $sum_actual_sigs: expr, $opt_anchors: expr) => {
 				let htlc = HTLCOutputInCommitment {
 					offered: if *$weight == WEIGHT_REVOKED_OFFERED_HTLC || *$weight == WEIGHT_OFFERED_HTLC { true } else { false },
 					amount_msat: 0,
@@ -3312,7 +3313,7 @@ mod tests {
 					payment_hash: PaymentHash([1; 32]),
 					transaction_output_index: Some($idx as u32),
 				};
-				let redeem_script = if *$weight == WEIGHT_REVOKED_OUTPUT { chan_utils::get_revokeable_redeemscript(&pubkey, 256, &pubkey) } else { chan_utils::get_htlc_redeemscript_with_explicit_keys(&htlc, &pubkey, &pubkey, &pubkey) };
+				let redeem_script = if *$weight == WEIGHT_REVOKED_OUTPUT { chan_utils::get_revokeable_redeemscript(&pubkey, 256, &pubkey) } else { chan_utils::get_htlc_redeemscript_with_explicit_keys(&htlc, $opt_anchors, &pubkey, &pubkey, &pubkey) };
 				let sighash = hash_to_message!(&$sighash_parts.signature_hash($idx, &redeem_script, $amount, SigHashType::All)[..]);
 				let sig = secp_ctx.sign(&sighash, &privkey);
 				$sighash_parts.access_witness($idx).push(sig.serialize_der().to_vec());
@@ -3360,7 +3361,7 @@ mod tests {
 		{
 			let mut sighash_parts = bip143::SigHashCache::new(&mut claim_tx);
 			for (idx, inp) in inputs_weight.iter().enumerate() {
-				sign_input!(sighash_parts, idx, 0, inp, sum_actual_sigs);
+				sign_input!(sighash_parts, idx, 0, inp, sum_actual_sigs, false);
 				inputs_total_weight += inp;
 			}
 		}
@@ -3386,7 +3387,7 @@ mod tests {
 		{
 			let mut sighash_parts = bip143::SigHashCache::new(&mut claim_tx);
 			for (idx, inp) in inputs_weight.iter().enumerate() {
-				sign_input!(sighash_parts, idx, 0, inp, sum_actual_sigs);
+				sign_input!(sighash_parts, idx, 0, inp, sum_actual_sigs, false);
 				inputs_total_weight += inp;
 			}
 		}
@@ -3410,7 +3411,7 @@ mod tests {
 		{
 			let mut sighash_parts = bip143::SigHashCache::new(&mut claim_tx);
 			for (idx, inp) in inputs_weight.iter().enumerate() {
-				sign_input!(sighash_parts, idx, 0, inp, sum_actual_sigs);
+				sign_input!(sighash_parts, idx, 0, inp, sum_actual_sigs, false);
 				inputs_total_weight += inp;
 			}
 		}
