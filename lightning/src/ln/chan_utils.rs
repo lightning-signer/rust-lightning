@@ -600,11 +600,9 @@ pub fn build_htlc_transaction(commitment_txid: &Txid, feerate_per_kw: u32, conte
 		witness: Vec::new(),
 	});
 
-	let total_fee = if htlc.offered {
-			feerate_per_kw as u64 * HTLC_TIMEOUT_TX_WEIGHT / 1000
-		} else {
-			feerate_per_kw as u64 * HTLC_SUCCESS_TX_WEIGHT / 1000
-		};
+	let mut weight = if htlc.offered { HTLC_TIMEOUT_TX_WEIGHT } else { HTLC_SUCCESS_TX_WEIGHT };
+	if opt_anchors { weight += 3; }
+	let total_fee = feerate_per_kw as u64 * weight / 1000;
 
 	let mut txouts: Vec<TxOut> = Vec::new();
 	txouts.push(TxOut {
