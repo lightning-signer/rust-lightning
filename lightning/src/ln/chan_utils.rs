@@ -42,8 +42,10 @@ use chain;
 
 pub(crate) const MAX_HTLCS: u16 = 483;
 
-pub(super) const HTLC_SUCCESS_TX_WEIGHT: u64 = 703;
-pub(super) const HTLC_TIMEOUT_TX_WEIGHT: u64 = 663;
+/// The fee for an HTLC-success transaction
+pub const HTLC_SUCCESS_TX_WEIGHT: u64 = 703;
+/// The fee for an HTLC-timeout transaction
+pub const HTLC_TIMEOUT_TX_WEIGHT: u64 = 663;
 
 #[derive(PartialEq)]
 pub(crate) enum HTLCType {
