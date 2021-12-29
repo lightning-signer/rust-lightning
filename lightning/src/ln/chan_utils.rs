@@ -1429,12 +1429,14 @@ impl<'a> TrustedCommitmentTransaction<'a> {
 
 		let htlc_redeemscript = get_htlc_redeemscript_with_explicit_keys(&this_htlc, self.opt_anchors(), &keys.broadcaster_htlc_key, &keys.countersignatory_htlc_key, &keys.revocation_key);
 
+		let sighashtype = if self.opt_anchors() { SigHashType::SinglePlusAnyoneCanPay } else { SigHashType::All };
+
 		// First push the multisig dummy, note that due to BIP147 (NULLDUMMY) it must be a zero-length element.
 		htlc_tx.input[0].witness.push(Vec::new());
 
 		htlc_tx.input[0].witness.push(counterparty_signature.serialize_der().to_vec());
 		htlc_tx.input[0].witness.push(signature.serialize_der().to_vec());
-		htlc_tx.input[0].witness[1].push(SigHashType::All as u8);
+		htlc_tx.input[0].witness[1].push(sighashtype as u8);
 		htlc_tx.input[0].witness[2].push(SigHashType::All as u8);
 
 		if this_htlc.offered {

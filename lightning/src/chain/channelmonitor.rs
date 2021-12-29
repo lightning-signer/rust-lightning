@@ -3576,10 +3576,11 @@ mod tests {
 					transaction_output_index: Some($idx as u32),
 				};
 				let redeem_script = if *$weight == WEIGHT_REVOKED_OUTPUT { chan_utils::get_revokeable_redeemscript(&pubkey, 256, &pubkey) } else { chan_utils::get_htlc_redeemscript_with_explicit_keys(&htlc, $opt_anchors, &pubkey, &pubkey, &pubkey) };
-				let sighash = hash_to_message!(&$sighash_parts.signature_hash($idx, &redeem_script, $amount, SigHashType::All)[..]);
+				let sighashtype = if *$weight != WEIGHT_REVOKED_OUTPUT && $opt_anchors { SigHashType::SinglePlusAnyoneCanPay } else { SigHashType::All };
+				let sighash = hash_to_message!(&$sighash_parts.signature_hash($idx, &redeem_script, $amount, sighashtype)[..]);
 				let sig = secp_ctx.sign(&sighash, &privkey);
 				$sighash_parts.access_witness($idx).push(sig.serialize_der().to_vec());
-				$sighash_parts.access_witness($idx)[0].push(SigHashType::All as u8);
+				$sighash_parts.access_witness($idx)[0].push(sighashtype as u8);
 				sum_actual_sigs += $sighash_parts.access_witness($idx)[0].len();
 				if *$weight == WEIGHT_REVOKED_OUTPUT {
 					$sighash_parts.access_witness($idx).push(vec!(1));

@@ -354,10 +354,10 @@ impl PackageSolvingData {
 			PackageSolvingData::CounterpartyOfferedHTLCOutput(ref outp) => {
 				if let Ok(chan_keys) = TxCreationKeys::derive_new(&onchain_handler.secp_ctx, &outp.per_commitment_point, &outp.counterparty_delayed_payment_base_key, &outp.counterparty_htlc_base_key, &onchain_handler.signer.pubkeys().revocation_basepoint, &onchain_handler.signer.pubkeys().htlc_basepoint) {
 					let witness_script = chan_utils::get_htlc_redeemscript_with_explicit_keys(&outp.htlc, onchain_handler.opt_anchors(), &chan_keys.broadcaster_htlc_key, &chan_keys.countersignatory_htlc_key, &chan_keys.revocation_key);
-
+					let sighashtype = if onchain_handler.opt_anchors() { SigHashType::SinglePlusAnyoneCanPay } else { SigHashType::All };
 					if let Ok(sig) = onchain_handler.signer.sign_counterparty_htlc_transaction(&bumped_tx, i, &outp.htlc.amount_msat / 1000, &outp.per_commitment_point, &outp.htlc, &onchain_handler.secp_ctx) {
 						bumped_tx.input[i].witness.push(sig.serialize_der().to_vec());
-						bumped_tx.input[i].witness[0].push(SigHashType::All as u8);
+						bumped_tx.input[i].witness[0].push(sighashtype as u8);
 						bumped_tx.input[i].witness.push(outp.preimage.0.to_vec());
 						bumped_tx.input[i].witness.push(witness_script.clone().into_bytes());
 					}
@@ -366,11 +366,12 @@ impl PackageSolvingData {
 			PackageSolvingData::CounterpartyReceivedHTLCOutput(ref outp) => {
 				if let Ok(chan_keys) = TxCreationKeys::derive_new(&onchain_handler.secp_ctx, &outp.per_commitment_point, &outp.counterparty_delayed_payment_base_key, &outp.counterparty_htlc_base_key, &onchain_handler.signer.pubkeys().revocation_basepoint, &onchain_handler.signer.pubkeys().htlc_basepoint) {
 					let witness_script = chan_utils::get_htlc_redeemscript_with_explicit_keys(&outp.htlc, onchain_handler.opt_anchors(), &chan_keys.broadcaster_htlc_key, &chan_keys.countersignatory_htlc_key, &chan_keys.revocation_key);
+					let sighashtype = if onchain_handler.opt_anchors() { SigHashType::SinglePlusAnyoneCanPay } else { SigHashType::All };
 
 					bumped_tx.lock_time = outp.htlc.cltv_expiry; // Right now we don't aggregate time-locked transaction, if we do we should set lock_time before to avoid breaking hash computation
 					if let Ok(sig) = onchain_handler.signer.sign_counterparty_htlc_transaction(&bumped_tx, i, &outp.htlc.amount_msat / 1000, &outp.per_commitment_point, &outp.htlc, &onchain_handler.secp_ctx) {
 						bumped_tx.input[i].witness.push(sig.serialize_der().to_vec());
-						bumped_tx.input[i].witness[0].push(SigHashType::All as u8);
+						bumped_tx.input[i].witness[0].push(sighashtype as u8);
 						// Due to BIP146 (MINIMALIF) this must be a zero-length element to relay.
 						bumped_tx.input[i].witness.push(vec![]);
 						bumped_tx.input[i].witness.push(witness_script.clone().into_bytes());
