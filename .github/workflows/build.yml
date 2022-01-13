@@ -109,8 +109,16 @@ jobs:
         run: RUSTFLAGS="-C link-dead-code" cargo test --verbose --color always
       - name: Test on no-std bullds Rust ${{ matrix.toolchain }}
         if: "matrix.build-no-std && !matrix.coverage"
+        shell: bash # Default on Winblows is powershell
         run: |
           cd lightning
+          cargo test --verbose --color always --no-default-features --features no-std
+          # check if there is a conflict between no-std and the default std feature
+          cargo test --verbose --color always --features no-std
+          # check if there is a conflict between no-std and the c_bindings cfg
+          RUSTFLAGS="--cfg=c_bindings" cargo test --verbose --color always --no-default-features --features=no-std
+          cd ..
+          cd lightning-invoice
           cargo test --verbose --color always --no-default-features --features no-std
           # check if there is a conflict between no-std and the default std feature
           cargo test --verbose --color always --features no-std
@@ -240,7 +248,7 @@ jobs:
           profile: minimal
       - name: Fetch full tree and rebase on upstream
         run: |
-          git remote add upstream https://github.com/rust-bitcoin/rust-lightning
+          git remote add upstream https://github.com/lightningdevkit/rust-lightning
           git fetch upstream
           export GIT_COMMITTER_EMAIL="rl-ci@example.com"
           export GIT_COMMITTER_NAME="RL CI"
